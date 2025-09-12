@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import config from './components/config';
 
 function HospitalManagement() {
     const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState(initialFormData());
     const [editingIndex, setEditingIndex] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    // 1️⃣ Initialize Form Data
     function initialFormData() {
         return {
+            id: '',          // Keep ID for edit/update
             email: '',
             firstName: '',
             lastName: '',
@@ -18,13 +21,20 @@ function HospitalManagement() {
         };
     }
 
-    // 2️⃣ Handle Input Change
+    // ✅ Retrieve Patients from Backend
+    function retrivePatients() {
+        setLoading(true);
+        axios.get(`${config.url}/patients`)
+            .then(res => setPatients(res.data))
+            .catch(err => console.error('Error fetching patients:', err))
+            .finally(() => setLoading(false));
+    }
+
     function handleInputChange(e) {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     }
 
-    // 3️⃣ Submit Form (Create or Update)
     function handleFormSubmit(e) {
         e.preventDefault();
         if (editingIndex !== null) {
@@ -34,107 +44,53 @@ function HospitalManagement() {
         }
     }
 
-    // 4️⃣ Create Patient
     function createPatient() {
-        setPatients([...patients, formData]);
-        resetForm();
+        axios.post(`${config.url}/patients`, formData)
+            .then(() => {
+                retrivePatients();
+                resetForm();
+            })
+            .catch(err => console.error('Error creating patient:', err));
     }
 
-    // 5️⃣ Update Patient
     function updatePatient() {
-        const updated = [...patients];
-        updated[editingIndex] = formData;
-        setPatients(updated);
-        resetForm();
-        setEditingIndex(null);
+        axios.put(`${config.url}/patients/${formData.id}`, formData)
+            .then(() => {
+                retrivePatients();
+                resetForm();
+                setEditingIndex(null);
+            })
+            .catch(err => console.error('Error updating patient:', err));
     }
 
-    // 6️⃣ Delete Patient
-    function deletePatient(index) {
-        const updated = [...patients];
-        updated.splice(index, 1);
-        setPatients(updated);
+    function deletePatient(id) {
+        axios.delete(`${config.url}/patients/${id}`)
+            .then(() => retrivePatients())
+            .catch(err => console.error('Error deleting patient:', err));
     }
 
-    // 7️⃣ Populate Form for Editing
-    function editPatient(index) {
-        setFormData(patients[index]);
+    function editPatient(patient, index) {
+        setFormData(patient);
         setEditingIndex(index);
     }
 
-    // 8️⃣ Reset Form Fields
     function resetForm() {
         setFormData(initialFormData());
     }
 
-    // 9️⃣ Render Component
     return (
         <div style={{ padding: '20px' }}>
             <h2>Hospital Management System</h2>
 
             {/* Form */}
             <form onSubmit={handleFormSubmit}>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                /><br /><br />
-
-                <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    required
-                /><br /><br />
-
-                <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    required
-                /><br /><br />
-
-                <input
-                    type="date"
-                    name="dob"
-                    value={formData.dob}
-                    onChange={handleInputChange}
-                    required
-                /><br /><br />
-
-                <input
-                    type="text"
-                    name="mobile"
-                    placeholder="Mobile"
-                    value={formData.mobile}
-                    onChange={handleInputChange}
-                    required
-                /><br /><br />
-
-                <input
-                    type="text"
-                    name="address"
-                    placeholder="Address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    required
-                /><br /><br />
-
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                /><br /><br />
+                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleInputChange} required /><br /><br />
+                <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleInputChange} required /><br /><br />
+                <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleInputChange} required /><br /><br />
+                <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} required /><br /><br />
+                <input type="text" name="mobile" placeholder="Mobile" value={formData.mobile} onChange={handleInputChange} required /><br /><br />
+                <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleInputChange} required /><br /><br />
+                <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} required /><br /><br />
 
                 <button type="submit">{editingIndex !== null ? 'Update Patient' : 'Add Patient'}</button>
                 <button type="button" onClick={resetForm} style={{ marginLeft: '10px' }}>Clear</button>
@@ -142,42 +98,52 @@ function HospitalManagement() {
 
             <hr />
 
-            {/* Patients Table */}
-            <h3>Patient Records</h3>
-            <table border="1" cellPadding="10">
-                <thead>
-                    <tr>
-                        <th>Email</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>DOB</th>
-                        <th>Mobile</th>
-                        <th>Address</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
+            {/* Button to Get Patients */}
+            <button onClick={retrivePatients} style={{ marginBottom: '20px' }}>
+                Get Patients
+            </button>
 
-                <tbody>
-                    {patients.length === 0 ? (
-                        <tr><td colSpan="7" align="center">No patient records</td></tr>
-                    ) : (
-                        patients.map((patient, index) => (
-                            <tr key={index}>
-                                <td>{patient.email}</td>
-                                <td>{patient.firstName}</td>
-                                <td>{patient.lastName}</td>
-                                <td>{patient.dob}</td>
-                                <td>{patient.mobile}</td>
-                                <td>{patient.address}</td>
-                                <td>
-                                    <button onClick={() => editPatient(index)}>Edit</button>
-                                    <button onClick={() => deletePatient(index)} style={{ marginLeft: '5px' }}>Delete</button>
-                                </td>
+            {loading ? (
+                <p>Loading patients...</p>
+            ) : (
+                <>
+                    <h3>Patient Records</h3>
+                    <table border="1" cellPadding="10">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>DOB</th>
+                                <th>Mobile</th>
+                                <th>Address</th>
+                                <th>Actions</th>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                        </thead>
+
+                        <tbody>
+                            {patients.length === 0 ? (
+                                <tr><td colSpan="7" align="center">No patient records</td></tr>
+                            ) : (
+                                patients.map((patient, index) => (
+                                    <tr key={patient.id}>
+                                        <td>{patient.email}</td>
+                                        <td>{patient.firstName}</td>
+                                        <td>{patient.lastName}</td>
+                                        <td>{patient.dob}</td>
+                                        <td>{patient.mobile}</td>
+                                        <td>{patient.address}</td>
+                                        <td>
+                                            <button onClick={() => editPatient(patient, index)}>Edit</button>
+                                            <button onClick={() => deletePatient(patient.id)} style={{ marginLeft: '5px' }}>Delete</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </>
+            )}
         </div>
     );
 }
