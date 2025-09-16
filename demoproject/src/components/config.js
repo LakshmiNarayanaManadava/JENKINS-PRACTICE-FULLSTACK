@@ -1,5 +1,5 @@
 const config ={
-    url:"http://localhost:9090/api/"
+    url:"http://localhost:9090"
 
 }
 export default config;
