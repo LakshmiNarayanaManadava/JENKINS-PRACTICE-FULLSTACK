@@ -20,12 +20,12 @@
 		  @Autowired
 		    private PatientService patientService;
 	
-		    @GetMapping
+		    @GetMapping("/get")
 		    public List<Patient> getAllPatients() {
 		        return patientService.getAllPatients();
 		    }
 	
-		    @PostMapping
+		    @PostMapping("/post")
 		    public Patient createPatient(@RequestBody Patient patient) {
 		        return patientService.createPatient(patient);
 		    }

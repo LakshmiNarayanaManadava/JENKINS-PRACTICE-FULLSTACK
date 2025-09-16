@@ -26,3 +26,9 @@
 2025-09-16 08:26:24,183 [Worker-53: Launching HospitalManagement - HospitalManagementApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
 2025-09-16 08:26:24,189 [Worker-53: Launching HospitalManagement - HospitalManagementApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
 2025-09-16 08:26:24,194 [Worker-53: Launching HospitalManagement - HospitalManagementApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\2025-2026\JENKINS-PRACTISE\HospitalManagement\src\test\resources
+2025-09-16 09:22:13,744 [Worker-61: Launching HospitalManagement - HospitalManagementApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-09-16 09:22:13,791 [Worker-61: Launching HospitalManagement - HospitalManagementApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-09-16 09:22:13,795 [Worker-61: Launching HospitalManagement - HospitalManagementApplication] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\2025-2026\JENKINS-PRACTISE\HospitalManagement\src\test\resources
+2025-09-16 09:37:52,620 [Worker-75: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-09-16 09:37:52,639 [Worker-75: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-09-16 09:37:52,644 [Worker-75: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\2025-2026\JENKINS-PRACTISE\HospitalManagement\src\test\resources
