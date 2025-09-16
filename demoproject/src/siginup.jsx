@@ -24,7 +24,7 @@ function HospitalManagement() {
     // ✅ Retrieve Patients from Backend
     function retrivePatients() {
         setLoading(true);
-        axios.get(`${config.url}/patients`)
+        axios.get(`${config.url}/api/patients`)
             .then(res => setPatients(res.data))
             .catch(err => console.error('Error fetching patients:', err))
             .finally(() => setLoading(false));
@@ -45,7 +45,7 @@ function HospitalManagement() {
     }
 
     function createPatient() {
-        axios.post(`${config.url}/patients`, formData)
+        axios.post(`${config.url}/api/patients`, formData)
             .then(() => {
                 retrivePatients();
                 resetForm();
@@ -54,7 +54,7 @@ function HospitalManagement() {
     }
 
     function updatePatient() {
-        axios.put(`${config.url}/patients/${formData.id}`, formData)
+        axios.put(`${config.url}/api/patients/${formData.id}`, formData)
             .then(() => {
                 retrivePatients();
                 resetForm();
@@ -64,7 +64,7 @@ function HospitalManagement() {
     }
 
     function deletePatient(id) {
-        axios.delete(`${config.url}/patients/${id}`)
+        axios.delete(`${config.url}/api/patients/${id}`)
             .then(() => retrivePatients())
             .catch(err => console.error('Error deleting patient:', err));
     }
