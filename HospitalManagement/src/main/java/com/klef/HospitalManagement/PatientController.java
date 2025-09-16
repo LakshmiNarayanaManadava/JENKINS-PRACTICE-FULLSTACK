@@ -15,7 +15,7 @@
 	import org.springframework.web.bind.annotation.RestController;
 	@RestController
 	@RequestMapping("/api/patients")
-	@CrossOrigin(origins = "*")
+	@CrossOrigin(origins = "http://localhost:2030")
 	public class PatientController {
 		  @Autowired
 		    private PatientService patientService;
